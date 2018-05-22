@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <title>百宝箱</title>
@@ -7,10 +7,60 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="mui/css/mui.min.css">
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="template/mui/css/mui.min.css">
+    <link rel="stylesheet" href="template/css/index.css?v=20180522104725">
 </head>
 <body>
+<div class="mui-content">
+    <div id="info-warp">
+        <div id="goods-warp">
+            <img :src="goods.img" alt="goods.name" id="goods-img">
+            <h3 id="goods-name">{{ goods.name }}</h3>
+            <p id="goods-intro">{{ goods.intro }}</p>
+        </div>
+        <form id="delivery-info">
 
+            <div class="input-warp">
+                <lable class="input-label">姓名</lable>
+                <input type="text" placeholder="请填写收货人姓名">
+            </div>
+            <div class="input-warp">
+                <lable class="input-label">手机</lable>
+                <input type="number" placeholder="请填写收货手机号码">
+            </div>
+            <div class="input-warp">
+                <lable class="input-label">地区</lable>
+                <span>--- 点击选择 ---</span>
+                <input type="hidden" name="province">
+                <input type="hidden" name="city">
+                <input type="hidden" name="area">
+            </div>
+            <div class="input-warp">
+                <lable class="input-label">详细地址</lable>
+                <input type="text" placeholder="例:2号楼-1101室">
+            </div>
+            <button type="submit" name="submit" value="submit" id="submit">确定</button>
+        </form>
+    </div>
+</div>
+<script src="template/mui/js/mui.min.js"></script>
+<script src="template/mui/js/mui.picker.all.js"></script>
+<script src="template/mui/js/city.data-3.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    var app = new Vue({
+        el: '.mui-content',
+        data: {
+            goods: {
+                img: 'http://img11.360buyimg.com/n7/s230x230_jfs/t17230/109/917256995/138054/d76864e3/5ab20c37Nb64a7234.jpg!cc_230x230.jpg',
+                name: '乐事（Lay’s）薯片 ',
+                intro: '乐事（Lay’s）薯片 零食 休闲食品 美国经典原味 70g 百事食品 口口香脆 根本停不下来',
+            }
+        },
+        mounted: function () {
+            mui.init();
+        }
+    });
+</script>
 </body>
 </html>
