@@ -14,5 +14,9 @@ if (DEVELOPMENT) {
 } else {
     error_reporting(0);
 }
-
+//接口地址
 $API_URL = '';
+//接口签名key
+$apiSignKey = '';
+
+require_once 'common.php';

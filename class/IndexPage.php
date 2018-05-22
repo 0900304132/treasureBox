@@ -13,11 +13,13 @@ class IndexPage implements Page
 {
     public function getVariable()
     {
-        // TODO: Implement getVariable() method.
+        require_once 'class/API.php';
     }
 
     public function getHtml()
     {
-        require_once 'template/index.html';
+        $apiData = $this->getVariable();
+//        require_once 'template/index.html';
+        require_once 'template/index_detail.html';
     }
 }
