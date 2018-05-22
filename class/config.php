@@ -7,7 +7,12 @@
  */
 
 defined('DEVELOPMENT') or define('DEVELOPMENT', 1);
-global $API_URL;
+
+if (DEVELOPMENT) {
+    ini_set('display_errors', '1');
+    error_reporting(E_ALL ^ E_NOTICE);
+} else {
+    error_reporting(0);
+}
 
 $API_URL = '';
-
