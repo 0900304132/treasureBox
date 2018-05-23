@@ -8,13 +8,14 @@
 
 function message($msg, $type = 'error', $redirect = '')
 {
+    $successAutoNext = true;
     if ($type == 'redirect') {
         if (empty($msg) && !empty($redirect)) {
             header('Location: ' . $redirect);
         }
         exit;
     } else {
-        require_once 'tempalte/message.html';
+        require_once 'template/message.html';
         exit;
     }
 }
