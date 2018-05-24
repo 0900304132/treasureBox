@@ -8,39 +8,39 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="template/mui/css/mui.min.css">
+    <link rel="stylesheet" href="template/mui/css/mui.picker.all.css">
     <link rel="stylesheet" href="template/css/index.css?v=20180522104725">
 </head>
 <body>
 <div class="mui-content">
     <div id="info-warp">
         <div id="goods-warp">
-            <img :src="goods.img" alt="goods.name" id="goods-img">
-            <h3 id="goods-name">{{ goods.name }}</h3>
-            <p id="goods-intro">{{ goods.intro }}</p>
+            <img src="<?php echo $goodsInfo->goodsImage; ?>" alt="<?php echo $goodsInfo->goodsName; ?>" id="goods-img">
+            <h3 id="goods-name"><?php echo $goodsInfo->goodsName; ?></h3>
+            <p id="goods-intro"><?php echo $goodsInfo->goodsNote; ?></p>
         </div>
-        <form id="delivery-info">
-
+        <div id="delivery-info">
             <div class="input-warp">
                 <lable class="input-label">姓名</lable>
-                <input type="text" placeholder="请填写收货人姓名">
+                <input type="text" placeholder="请填写收货人姓名" v-model="receiver">
             </div>
             <div class="input-warp">
                 <lable class="input-label">手机</lable>
-                <input type="number" placeholder="请填写收货手机号码">
+                <input type="number" placeholder="请填写收货手机号码" v-model="phone">
             </div>
             <div class="input-warp">
                 <lable class="input-label">地区</lable>
-                <span>--- 点击选择 ---</span>
-                <input type="hidden" name="province">
-                <input type="hidden" name="city">
-                <input type="hidden" name="area">
+                <span @click="pickAddress">{{ addressNotice }}</span>
+                <input type="hidden" name="province" v-model="province">
+                <input type="hidden" name="city" v-model="city">
+                <input type="hidden" name="area" v-model="area">
             </div>
             <div class="input-warp">
                 <lable class="input-label">详细地址</lable>
-                <input type="text" placeholder="例:2号楼-1101室">
+                <input type="text" placeholder="例:2号楼-1101室" v-model="address">
             </div>
-            <button type="submit" name="submit" value="submit" id="submit">确定</button>
-        </form>
+            <button @click="infoSubmit" id="submit">确定</button>
+        </div>
     </div>
 </div>
 <script src="template/mui/js/mui.min.js"></script>
@@ -51,16 +51,89 @@
     var app = new Vue({
         el: '.mui-content',
         data: {
-            goods: {
-                img: 'http://img11.360buyimg.com/n7/s230x230_jfs/t17230/109/917256995/138054/d76864e3/5ab20c37Nb64a7234.jpg!cc_230x230.jpg',
-                name: '乐事（Lay’s）薯片 ',
-                intro: '乐事（Lay’s）薯片 零食 休闲食品 美国经典原味 70g 百事食品 口口香脆 根本停不下来',
-            }
+            receiver: '',
+            phone: '',
+            province: '',
+            city: '',
+            area: '',
+            address: '',
+            addressPicker: '',
         },
         mounted: function () {
             mui.init();
+            this.addressPicker = new mui.PopPicker({
+                layer: 3,
+            });
+            this.addressPicker.setData(cityData3);
+        },
+        methods: {
+            infoSubmit: function () {
+                var nameReg = /^[\u4E00-\u9FA5|\uf900-\ufa2d]{2,4}$/;
+                var mobileReg = /^\d{11}$/;
+
+                if (!nameReg.test(this.receiver)) {
+                    mui.alert('请填写真实的收货姓名');
+                    return false;
+                }
+                if (!mobileReg.test(this.phone)) {
+                    mui.alert('请填写真实的手机号码');
+                    return false;
+                }
+                if (!this.province || !this.city || !this.area) {
+                    mui.alert('请选择收货地区');
+                    return false;
+                }
+                if (!this.address) {
+                    mui.alert('请填写详情地址');
+                    return false;
+                }
+
+                mui.ajax('index.php', {
+                    data: {
+                        receiver: app.receiver,
+                        phone: app.phone,
+                        province: app.province,
+                        city: app.city,
+                        area: app.area,
+                        address: app.address,
+                        qrContent: "<?php echo $_GET['qrContent']; ?>",
+                        op: 'index_submit',
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code == '00000') {
+                            mui.alert('商品将由快递发送至您填写的地址,请注意查收.商品发货后,您可以再次扫描卡片上的二维码,查询物流信息', '领取成功', function () {
+                                location.href = "index.php?qrContent=<?php echo $_GET['qrContent']; ?>"
+                            });
+                        } else {
+                            mui.alert(data.info);
+                        }
+                    }
+                });
+            },
+            pickAddress: function () {
+                this.addressPicker.show(function (items) {
+                    console.log(app.addressPicker);
+                    var province = items[0].text;
+                    var city = items[1].text;
+                    var area = items[2].text;
+                    app.province = province;
+                    app.city = city;
+                    app.area = area;
+                });
+            }
+        },
+        computed: {
+            addressNotice: function () {
+                var notice = '--- 点击选择 ---';
+                if (this.province && this.city && this.area) {
+                    notice = this.province + '-' + this.city + '-' + this.area;
+                }
+                return notice;
+            }
         }
     });
+
 </script>
 </body>
 </html>

@@ -10,14 +10,19 @@ if (is_file('class/config.php')) {
 } else {
     exit('NO CONFIGURE');
 }
-
-$do = $_GET['do'] ?: 'index';
+$_GP = array_merge($_GET, $_POST);
+$do = $_GP['op'] ?: 'index';
 
 switch ($do) {
     case 'index':
         include_once 'class/IndexPage.php';
         $indexPage = new IndexPage();
         $indexPage->getHtml();
+        break;
+    case 'index_submit':
+        include_once 'class/IndexPage.php';
+        $indexPage = new IndexPage();
+        $indexPage->setVariable();
         break;
     default:
         exit('method not found');

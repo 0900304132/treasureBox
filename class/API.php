@@ -13,7 +13,7 @@ class API
      * @param string $type 服务器处理或者ajax处理
      * @return mixed|stdClass 接口数据
      */
-    public static function call($sub_path, $data, $type = 'service')
+    public static function getResult($sub_path, $data, $type = 'service')
     {
         require_once 'SignMD5.php';
         global $API_URL;
@@ -29,7 +29,7 @@ class API
                     return $result_obj;
                 }
                 if (DEVELOPMENT) {
-                    echo self::API_URL . $sub_path . '<br>';
+                    echo $API_URL . $sub_path . '<br>';
                     var_dump($data);
                     var_dump($result_obj);
                     exit;
@@ -43,6 +43,17 @@ class API
             $result_obj->info = '调用接口失败';
             return $result_obj;
         }
+    }
+
+    /**
+     * 返回接口的 json 数据
+     * @param $sub_path
+     * @param $data
+     * @param string $type
+     */
+    public static function getJsonResult($sub_path, $data, $type = 'ajax')
+    {
+        die(json_encode(self::getResult($sub_path, $data, $type)));
     }
 
     /**

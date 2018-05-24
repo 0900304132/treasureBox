@@ -14,9 +14,9 @@
 <div class="mui-content">
     <div class="info-card">
         <div id="goods-warp">
-            <img :src="goods.img" alt="goods.name" id="goods-img">
-            <h3 id="goods-name">{{ goods.name }}</h3>
-            <p id="goods-intro">{{ goods.intro }}</p>
+            <img src="<?php echo $goodsInfo->goodsImage; ?>" alt="<?php echo $goodsInfo->goodsName; ?>" id="goods-img">
+            <h3 id="goods-name"><?php echo $goodsInfo->goodsName; ?></h3>
+            <p id="goods-intro"><?php echo $goodsInfo->goodsNote; ?></p>
         </div>
     </div>
     <div class="info-card">
@@ -25,20 +25,23 @@
         </div>
         <div class="card-detail">
             <h4>
-                <span>{{ addressInfo.username }}</span>
-                <span>{{ addressInfo.mobile }}</span>
+                <span><?php echo $orderInfo->receiver; ?></span>
+                <span><?php echo $orderInfo->phone; ?></span>
             </h4>
-            <p>{{ addressInfo.areaInfo }}<br>{{ addressInfo.detailAddress }}</p>
+            <p><?php echo $orderInfo->province.$orderInfo->city.$orderInfo->area; ?><br><?php echo $orderInfo->address;
+                ?></p>
         </div>
     </div>
+    <?php if($orderInfo->logisticsNumber){ ?>
     <div class="info-card">
         <div class="nav-title">
             <span>物流信息</span>
         </div>
         <div class="card-detail">
-            <h4>{{ deliveryInfo }}</h4>
+            <h4><?php echo $orderInfo->logisticsName. ''. $orderInfo->logisticsNumber; ?></h4>
         </div>
     </div>
+    <?php } ?>
 </div>
 <script src="template/mui/js/mui.min.js"></script>
 <script src="template/mui/js/mui.picker.all.js"></script>
